@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Stopwatch App</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
   <div class="container">
@@ -14,6 +14,95 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <style>
+  .container {
+    text-align: center;
+    margin-top: 50px;
+    border: 2px ridge black;
+    border-radius: 2rem;
+    padding: 2rem 0 2rem 0;
+  }
+  
+  .timer {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+  
+  .controls button {
+    margin: 5px;
+    font-size: 18px;
+    padding: 6px 20px;
+  }
+
+</style>
+  
+
+  <script>
+    // Get DOM elements
+var timerDisplay = document.querySelector('.timer');
+var startButton = document.getElementById('start');
+var stopButton = document.getElementById('stop');
+var resetButton = document.getElementById('reset');
+
+var timerId; // Holds the setInterval ID
+var startTime; // Holds the start time
+var elapsedTime = 0; // Holds the elapsed time
+
+// Format the time in HH:MM:SS format
+function formatTime(time) {
+  var hours = Math.floor(time / 3600);
+  var minutes = Math.floor((time % 3600) / 60);
+  var seconds = time % 60;
+
+  return (
+    String(hours).padStart(2, '0') +
+    ':' +
+    String(minutes).padStart(2, '0') +
+    ':' +
+    String(seconds).padStart(2, '0')
+  );
+}
+
+// Update the timer display
+function updateTimer() {
+  var currentTime = Math.floor((Date.now() - startTime) / 1000) + elapsedTime;
+  timerDisplay.textContent = formatTime(currentTime);
+}
+
+// Start the timer
+function startTimer() {
+  if (timerId) {
+    // Timer is already running, so clear the previous interval
+    clearInterval(timerId);
+  } else {
+    // Timer is not running, so set the start time
+    startTime = Date.now();
+  }
+
+  timerId = setInterval(updateTimer, 1000);
+  startButton.disabled = true;
+}
+
+// Stop the timer
+function stopTimer() {
+  clearInterval(timerId);
+  timerId = null;
+  elapsedTime += Math.floor((Date.now() - startTime) / 1000);
+  startButton.disabled = false;
+}
+
+// Reset the timer
+function resetTimer() {
+  stopTimer();
+  elapsedTime = 0;
+  timerDisplay.textContent = formatTime(elapsedTime);
+}
+
+// Attach event listeners
+startButton.addEventListener('click', startTimer);
+stopButton.addEventListener('click', stopTimer);
+resetButton.addEventListener('click', resetTimer);
+
+  </script>
 </body>
 </html>
